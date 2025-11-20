@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic rendering for admin page
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect } from 'react';
 import { Trash2, Plus, Upload, Image as ImageIcon, Video, Link as LinkIcon } from 'lucide-react';
 import { MediaItem, MediaType } from '@/lib/media-data';
