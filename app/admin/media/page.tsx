@@ -125,8 +125,8 @@ export default function MediaAdminPage() {
     e.preventDefault();
 
     // Validate required fields
-    if (!altText.trim() || !category) {
-      alert('Please fill in Alt Text and Category');
+    if (!category) {
+      alert('Please select a Category');
       return;
     }
 
@@ -169,7 +169,7 @@ export default function MediaAdminPage() {
       id: `media-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: mediaType,
       src: finalUrl,
-      alt: altText.trim(),
+      alt: altText.trim() || 'Media item',
       category: category,
       createdAt: new Date().toISOString(),
       featured: featured,
@@ -419,14 +419,13 @@ export default function MediaAdminPage() {
                 {/* Alt Text */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Alt Text / Description *
+                    Alt Text / Description (optional)
                   </label>
                   <Input
                     value={altText}
                     onChange={(e) => setAltText(e.target.value)}
-                    placeholder="Describe this media..."
+                    placeholder="Describe this media (optional)..."
                     className="bg-slate-700 border-slate-600 text-white"
-                    required
                   />
                 </div>
 

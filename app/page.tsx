@@ -19,8 +19,10 @@ const LiveChat = dynamic(() => import('@/components/live-chat').then(mod => ({ d
 const MediaGallery = dynamic(() => import('@/components/media-gallery').then(mod => ({ default: mod.MediaGallery })), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center py-20">
-      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="aspect-square bg-slate-800 rounded-lg animate-pulse border border-slate-700"></div>
+      ))}
     </div>
   ),
 });
@@ -120,7 +122,7 @@ export default function DJVishSite() {
               <Headphones className="w-8 h-8 text-orange-400" />
               <span className="text-xl font-bold text-white">DJ VISH</span>
           </div>
-            
+          
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <button onClick={() => scrollToSection('about')} className="text-gray-300 hover:text-orange-400 transition-colors">About</button>

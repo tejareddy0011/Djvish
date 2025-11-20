@@ -21,7 +21,7 @@ export function MediaGallery({ initialMedia = [] }: MediaGalleryProps) {
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(initialMedia.length === 0);
 
   // Fetch media on mount - only if not provided as initialMedia
   useEffect(() => {
@@ -29,8 +29,9 @@ export function MediaGallery({ initialMedia = [] }: MediaGalleryProps) {
       fetchMedia();
     } else {
       setMedia(initialMedia);
+      setIsLoading(false);
     }
-  }, [initialMedia]);
+  }, []);
 
   const fetchMedia = async () => {
     setIsLoading(true);
@@ -237,8 +238,10 @@ export function MediaGallery({ initialMedia = [] }: MediaGalleryProps) {
 
       {/* Media Grid/List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="aspect-square bg-slate-800 rounded-lg animate-pulse border border-slate-700"></div>
+          ))}
         </div>
       ) : filteredMedia.length === 0 ? (
         <div className="text-center py-20">

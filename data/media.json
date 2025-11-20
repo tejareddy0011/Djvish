@@ -1,5 +1,14 @@
 [
   {
+    "id": "media-1763673076298-6e7a5g1qn",
+    "type": "image",
+    "src": "https://93georogldizvxbj.public.blob.vercel-storage.com/E824A628-413C-456E-9DBD-92D195CF044D_1_201_a_1763673070147_2k6fb5e-uKk8PTBfIiTQ0G3Y8vFT5qfKh1Hh46.jpeg",
+    "alt": "Media item",
+    "category": "Wedding",
+    "createdAt": "2025-11-20T21:11:16.298Z",
+    "featured": false
+  },
+  {
     "id": "1",
     "type": "image",
     "src": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9083-ZOLxXh9mqS5DSFYCjWqZdlxxcsHmDV.jpeg",
@@ -44,4 +53,3 @@
     "description": "Fun-filled birthday party with great music"
   }
 ]
-
