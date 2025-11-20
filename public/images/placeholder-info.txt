@@ -1,0 +1,62 @@
+# 📸 DJ Vish Website - Image Placeholders
+
+## 🎯 **What Images to Add Here**
+
+### **Gallery Images** (`/images/gallery/`)
+Add your real event photos here:
+- `wedding-reception-1.jpg` - Wedding reception photos
+- `corporate-event-1.jpg` - Corporate event photos  
+- `birthday-party-1.jpg` - Birthday party photos
+- `cultural-event-1.jpg` - Cultural celebration photos
+- `equipment-setup-1.jpg` - Your DJ setup photos
+- `performance-1.jpg` - Live performance photos
+
+### **Social Media Images** (`/images/social/`)
+Add screenshots of your social media posts:
+- `instagram-wedding-1.jpg` - Instagram post screenshots
+- `facebook-corporate-1.jpg` - Facebook post screenshots
+- `yelp-reviews-1.jpg` - Yelp review screenshots
+
+### **Equipment Images** (`/images/equipment/`)
+Showcase your professional gear:
+- `sound-system-1.jpg` - Your speakers and audio equipment
+- `lighting-setup-1.jpg` - Your lighting rig
+- `dj-controller-1.jpg` - Your DJ equipment
+- `wireless-mics-1.jpg` - Your microphones
+
+### **Event Images** (`/images/events/`)
+Add photos from specific events:
+- `wedding-2024-12-15.jpg` - Specific event photos
+- `corporate-2024-12-21.jpg` - Corporate event photos
+- `birthday-2024-11-28.jpg` - Birthday party photos
+
+## 💡 **Image Requirements**
+
+- **Format**: JPG or PNG
+- **Size**: 800x600px minimum (larger is better)
+- **Quality**: High resolution, clear photos
+- **Content**: Show your events, equipment, and performances
+
+## 🚀 **Quick Start**
+
+1. **Take photos** at your next event
+2. **Save them** in the appropriate folder
+3. **Update the fixtures** in `lib/fixtures.ts`
+4. **Test your website** to see the changes
+
+## 📱 **Social Media Tips**
+
+- **Instagram**: Screenshot your posts with engagement
+- **Facebook**: Capture your page posts and events
+- **Yelp**: Screenshot your reviews and ratings
+
+## 🎧 **Equipment Photos**
+
+- **Sound System**: Show your speakers and subwoofers
+- **Lighting**: Display your LED lights and effects
+- **Setup**: Show your complete DJ station
+- **Action**: Photos of you performing
+
+---
+
+**Remember**: Real photos build trust with potential clients! 📸✨

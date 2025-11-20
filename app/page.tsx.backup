@@ -1,0 +1,991 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Instagram, Facebook, Mail, Phone, MapPin, Clock, Star, Play, Pause, Volume2, Calendar, Menu, X, Music, Zap, Sparkles, Award, Users, Headphones } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
+import { submitContactForm } from './actions';
+
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  eventDate: string;
+  eventType: string;
+  message: string;
+}
+
+interface GalleryImage {
+  src: string;
+  alt: string;
+  category: string;
+}
+
+export default function DJVishSite() {
+  const [form, setForm] = useState<FormData>({ name: '', email: '', phone: '', eventDate: '', eventType: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [currentTrack, setCurrentTrack] = useState<number | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [scrollY, setScrollY] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    // Trigger entrance animation
+    setTimeout(() => setIsVisible(true), 100);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, []);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const result = await submitContactForm(form);
+      if (result.success) {
+        setSubmitMessage('Thank you! Your booking request has been sent. We\'ll get back to you within 24 hours.');
+        setForm({ name: '', email: '', phone: '', eventDate: '', eventType: '', message: '' });
+      } else {
+        setSubmitMessage('Sorry, there was an error sending your message. Please try again or email us directly.');
+      }
+    } catch (error) {
+      setSubmitMessage('Sorry, there was an error sending your message. Please try again or email us directly.');
+    }
+    
+    setIsSubmitting(false);
+    setTimeout(() => setSubmitMessage(''), 5000);
+  };
+
+  const playTrack = (trackId: number) => {
+    if (currentTrack === trackId && isPlaying) {
+      setIsPlaying(false);
+    } else {
+      setCurrentTrack(trackId);
+      setIsPlaying(true);
+    }
+  };
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    setMobileMenuOpen(false);
+  };
+
+  const musicSamples = [
+    { id: 1, title: "Bollywood Wedding Mix", duration: "3:45", genre: "Bollywood", energy: 95 },
+    { id: 2, title: "Telugu Hits Mashup", duration: "4:12", genre: "Tollywood", energy: 88 },
+    { id: 3, title: "Hip-Hop & EDM Fusion", duration: "3:28", genre: "Hip-Hop/EDM", energy: 92 },
+    { id: 4, title: "Classical Indian Remix", duration: "5:03", genre: "Classical Fusion", energy: 85 }
+  ];
+
+  const galleryImages = [
+    { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9083-ZOLxXh9mqS5DSFYCjWqZdlxxcsHmDV.jpeg", alt: "DJ Vish at wedding reception", category: "Wedding" },
+    { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9085-C6yR8sgxxTypoyWWaWQr2CrVWq8Bgc.jpeg", alt: "DJ Vish performing live", category: "Performance" },
+    { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9082-c8XZXBnbiXwi7gXteRmMfrubi07ezA.jpeg", alt: "DJ Vish at corporate event", category: "Corporate" },
+    { src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9084-1Rkk25tcsmbZreg8TPNmWHDsZvmceY.jpeg", alt: "DJ Vish at birthday party", category: "Party" }
+  ];
+
+  const faqs = [
+    {
+      question: "How far in advance should I book DJ Vish?",
+      answer: "For weddings and major events, we recommend booking 3-6 months in advance to ensure availability. For smaller parties and corporate events, 2-4 weeks is usually sufficient. However, we can accommodate last-minute requests when possible."
+    },
+    {
+      question: "What equipment does DJ Vish provide?",
+      answer: "DJ Vish brings professional-grade sound systems, wireless microphones, dynamic lighting, and backup equipment to every event. The setup is tailored to your venue size and guest count to ensure optimal sound quality."
+    },
+    {
+      question: "Can DJ Vish play specific songs or take requests during the event?",
+      answer: "Absolutely! DJ Vish loves taking requests and will work with you beforehand to create a custom playlist. He's known for reading the crowd and adapting his music selection to keep everyone dancing."
+    },
+    {
+      question: "Does DJ Vish offer MC services?",
+      answer: "Yes! DJ Vish is a skilled bilingual MC who can host your event in English, Hindi, and Telugu. He's perfect for multicultural events and can handle announcements, introductions, and crowd engagement."
+    },
+    {
+      question: "What's included in DJ Vish's service?",
+      answer: "Full service includes professional DJ equipment, lighting, wireless microphones, MC services, setup/teardown, and consultation for music selection. We also provide backup equipment to ensure your event runs smoothly."
+    },
+    {
+      question: "Does DJ Vish travel outside the Bay Area?",
+      answer: "Yes, DJ Vish is available for destination events throughout California and beyond. Travel fees apply for locations outside the standard service area. Contact us for a custom quote."
+    }
+  ];
+
+  return (
+    <div className="bg-slate-900 text-white font-sans scroll-smooth">
+      <h1>DJ VISH</h1>
+      <p>Test</p>
+
+      {/* Redesigned Hero Section */}
+      <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 relative overflow-hidden pt-16">
+        {/* DJ-Themed Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-orange-950 to-red-900">
+          {/* Dynamic Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-950 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-red-500/15 via-transparent to-transparent"></div>
+          
+          {/* Enhanced Grid Pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(249,115,22,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(249,115,22,0.1)_1px,transparent_1px)] bg-[size:80px_80px] opacity-40 animate-pulse" style={{animationDuration: '8s'}}"></div>
+          
+          {/* Futuristic Scanning Lines */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-400/60 to-transparent animate-pulse" style={{animationDuration: '3s'}}></div>
+            <div className="absolute top-1/4 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-red-400/50 to-transparent animate-pulse" style={{animationDuration: '4s', animationDelay: '1s'}}></div>
+            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-orange-300/50 to-transparent animate-pulse" style={{animationDuration: '5s', animationDelay: '2s'}}></div>
+            <div className="absolute top-3/4 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-red-300/50 to-transparent animate-pulse" style={{animationDuration: '3.5s', animationDelay: '0.5s'}}></div>
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-400/60 to-transparent animate-pulse" style={{animationDuration: '4.5s', animationDelay: '1.5s'}}></div>
+          </div>
+          
+          {/* Futuristic Corner Elements */}
+          <div className="absolute inset-0">
+            {/* Top Left Corner */}
+            <div className="absolute top-4 left-4 w-16 h-16 border-l-2 border-t-2 border-orange-400/60 animate-pulse" style={{animationDuration: '2s'}}></div>
+            <div className="absolute top-6 left-6 w-12 h-12 border-l border-t border-red-400/40 animate-pulse" style={{animationDuration: '3s', animationDelay: '1s'}}></div>
+            
+            {/* Top Right Corner */}
+            <div className="absolute top-4 right-4 w-16 h-16 border-r-2 border-t-2 border-orange-400/60 animate-pulse" style={{animationDuration: '2.5s', animationDelay: '0.5s'}}></div>
+            <div className="absolute top-6 right-6 w-12 h-12 border-r border-t border-red-400/40 animate-pulse" style={{animationDuration: '3.5s', animationDelay: '1.5s'}}></div>
+            
+            {/* Bottom Left Corner */}
+            <div className="absolute bottom-4 left-4 w-16 h-16 border-l-2 border-b-2 border-red-400/60 animate-pulse" style={{animationDuration: '2.2s', animationDelay: '0.8s'}}></div>
+            <div className="absolute bottom-6 left-6 w-12 h-12 border-l border-b border-orange-400/40 animate-pulse" style={{animationDuration: '3.2s', animationDelay: '1.2s'}}></div>
+            
+            {/* Bottom Right Corner */}
+            <div className="absolute bottom-4 right-4 w-16 h-16 border-r-2 border-b-2 border-red-400/60 animate-pulse" style={{animationDuration: '2.8s', animationDelay: '1.2s'}}></div>
+            <div className="absolute bottom-6 right-6 w-12 h-12 border-r border-b border-orange-400/40 animate-pulse" style={{animationDuration: '3.8s', animationDelay: '0.8s'}}></div>
+          </div>
+          
+
+          
+          {/* Animated Particles */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-orange-400/60 rounded-full animate-pulse" style={{animationDuration: '4s'}}></div>
+            <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-red-400/70 rounded-full animate-pulse" style={{animationDuration: '6s', animationDelay: '1s'}}></div>
+            <div className="absolute bottom-1/3 left-1/3 w-2.5 h-2.5 bg-orange-300/50 rounded-full animate-pulse" style={{animationDuration: '5s', animationDelay: '2s'}}></div>
+            <div className="absolute top-2/3 right-1/4 w-1.5 h-1.5 bg-red-300/40 rounded-full animate-pulse" style={{animationDuration: '7s', animationDelay: '0.5s'}}></div>
+            <div className="absolute bottom-1/4 right-1/3 w-2 h-2 bg-orange-300/60 rounded-full animate-pulse" style={{animationDuration: '8s', animationDelay: '1.5s'}}></div>
+            <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-white/80 rounded-full animate-ping" style={{animationDelay: '0.8s'}}></div>
+            <div className="absolute top-1/6 right-1/6 w-2 h-2 bg-red-300/50 rounded-full animate-pulse" style={{animationDuration: '5.5s', animationDelay: '0.3s'}}></div>
+            <div className="absolute bottom-1/6 left-1/6 w-1.5 h-1.5 bg-orange-300/45 rounded-full animate-pulse" style={{animationDuration: '6.5s', animationDelay: '1.2s'}}></div>
+          </div>
+          
+          {/* Radial Gradients for Depth */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(249,115,22,0.2),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(239,68,68,0.15),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(251,146,60,0.12),transparent_60%)]"></div>
+          
+          {/* Subtle Moving Lines */}
+          <div className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-400/40 to-transparent animate-pulse" style={{animationDuration: '3s'}}></div>
+          <div className="absolute bottom-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-red-400/40 to-transparent animate-pulse" style={{animationDuration: '4s', animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-300/30 to-transparent animate-pulse" style={{animationDuration: '5s', animationDelay: '2s'}}></div>
+          
+          {/* Corner Glows */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-red-500/10 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-orange-400/8 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-red-400/8 to-transparent rounded-full blur-3xl"></div>
+          
+          {/* Subtle Noise Texture */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="w-full h-full bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.1)_1px,transparent_0)] bg-[size:20px_20px]"></div>
+          </div>
+          
+          {/* Futuristic Data Stream */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-1/6 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-400/30 to-transparent animate-pulse" style={{animationDuration: '6s'}}></div>
+            <div className="absolute top-2/6 right-0 w-full h-px bg-gradient-to-l from-transparent via-red-400/30 to-transparent animate-pulse" style={{animationDuration: '7s', animationDelay: '2s'}}></div>
+            <div className="absolute top-4/6 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-300/30 to-transparent animate-pulse" style={{animationDuration: '5s', animationDelay: '1s'}}></div>
+            <div className="absolute top-5/6 right-0 w-full h-px bg-gradient-to-l from-transparent via-red-300/30 to-transparent animate-pulse" style={{animationDuration: '8s', animationDelay: '3s'}}></div>
+          </div>
+          
+          {/* Custom DJ VISH Headphone Background */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-40">
+            <div className="relative w-[500px] h-[500px] transform rotate-12 scale-100">
+              {/* Headphone Base */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {/* Left Earcup */}
+                <div className="w-48 h-48 bg-black rounded-full border-6 border-yellow-400 shadow-[0_0_50px_rgba(250,204,21,0.6)] relative">
+                  {/* Clean left earcup - no branding */}
+                </div>
+                
+                {/* Right Earcup */}
+                <div className="w-48 h-48 bg-black rounded-full border-6 border-yellow-400 shadow-[0_0_50px_rgba(250,204,21,0.6)] ml-8 relative">
+                  {/* Clean right earcup - no additional elements */}
+                </div>
+                
+                {/* Cable */}
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-24 bg-gradient-to-b from-yellow-400 via-yellow-300 to-transparent"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Additional Glow Effects for Headphone */}
+          <div className="absolute inset-0">
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-400/10 rounded-full blur-3xl animate-pulse" style={{animationDuration: '4s'}}></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-yellow-400/5 rounded-full blur-2xl animate-pulse" style={{animationDuration: '6s', animationDelay: '1s'}}></div>
+          </div>
+          
+
+        </div>
+
+        {/* Main Content */}
+        <div className={`relative z-10 max-w-4xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          {/* DJ VISH Logo and Branding */}
+          <div className="mb-12">
+            {/* Custom Headphone Logo */}
+            <div className="flex justify-center mb-6">
+              <div className="relative group">
+                {/* Headphone Icon */}
+                <div className="w-24 h-24 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(236,72,153,0.4)] transition-all duration-300 group-hover:shadow-[0_0_40px_rgba(236,72,153,0.6)] group-hover:scale-110">
+                  <svg width="48" height="32" viewBox="0 0 48 32" className="text-white transition-transform duration-300 group-hover:scale-110">
+                    <path d="M8 16 Q8 8 24 8 Q40 8 40 16" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                    <circle cx="6" cy="18" r="4" fill="currentColor"/>
+                    <circle cx="42" cy="18" r="4" fill="currentColor"/>
+                    <path d="M6 22 Q6 26 12 26 L18 26" stroke="currentColor" strokeWidth="2" fill="none"/>
+                    <path d="M42 22 Q42 26 36 26 L30 26" stroke="currentColor" strokeWidth="2" fill="none"/>
+                  </svg>
+                </div>
+                {/* Glow Ring */}
+                <div className="absolute inset-0 rounded-full border-2 border-orange-400/50 animate-ping"></div>
+                {/* Hover Glow */}
+                <div className="absolute inset-0 rounded-full bg-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+              </div>
+            </div>
+            
+                          {/* Main Title */}
+              <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] relative">
+                <span className="bg-gradient-to-r from-orange-400 via-red-500 to-orange-400 bg-clip-text text-transparent animate-pulse" style={{animationDuration: '3s'}}>
+                  DJ VISH
+                </span>
+                <div className="absolute -inset-1 bg-gradient-to-r from-orange-400/20 via-red-500/20 to-orange-400/20 blur-lg opacity-50 animate-pulse" style={{animationDuration: '4s', animationDelay: '1s'}}></div>
+              </h1>
+            
+                          {/* Subtitle */}
+              <div className="text-xl md:text-2xl text-orange-300 font-mono tracking-wider mb-2 relative">
+                <span className="bg-gradient-to-r from-orange-300 via-red-300 to-orange-300 bg-clip-text text-transparent">
+                  PREMIER BAY AREA DJ
+                </span>
+                <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-red-400 group-hover:w-full transition-all duration-1000"></div>
+              </div>
+            
+            {/* Tagline */}
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Creating unforgettable moments with the perfect blend of Bollywood, Tollywood, Hip-Hop & EDM
+            </p>
+          </div>
+
+          {/* Profile Image */}
+          <div className="mb-8">
+            <div className="relative w-32 h-32 mx-auto group">
+              <Image 
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9083-ZOLxXh9mqS5DSFYCjWqZdlxxcsHmDV.jpeg" 
+                alt="DJ Vish" 
+                fill
+                className="rounded-full border-4 border-orange-400 shadow-[0_0_25px_rgba(236,72,153,0.5)] object-cover transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_35px_rgba(236,72,153,0.7)]"
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-orange-600/20 to-transparent"></div>
+              {/* Hover Glow */}
+              <div className="absolute inset-0 rounded-full bg-orange-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="mb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-8 text-gray-300 mb-6">
+              <div className="flex items-center group">
+                <MapPin className="w-4 h-4 mr-2 text-orange-400 transition-transform duration-300 group-hover:scale-110" />
+                <span className="font-mono group-hover:text-orange-300 transition-colors">Fremont, CA</span>
+              </div>
+              <div className="flex items-center group">
+                <Phone className="w-4 h-4 mr-2 text-orange-400 transition-transform duration-300 group-hover:scale-110" />
+                <a href="tel:+14085551234" className="hover:text-orange-300 transition-colors font-mono">(408) 555-1234</a>
+              </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex justify-center space-x-6">
+              <Link 
+                href="https://www.instagram.com/djvish_official" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-orange-400 hover:text-orange-300 transition-all duration-300 transform hover:scale-110 hover:rotate-3"
+              >
+                <Instagram className="w-6 h-6" />
+                <span className="sr-only">Instagram</span>
+              </Link>
+              <Link 
+                href="https://www.facebook.com/djvishofficial" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 transition-all duration-300 transform hover:scale-110 hover:-rotate-3"
+              >
+                <Facebook className="w-6 h-6" />
+                <span className="sr-only">Facebook</span>
+              </Link>
+              <Link 
+                href="mailto:booking@djvish.com"
+                className="text-purple-400 hover:text-purple-300 transition-all duration-300 transform hover:scale-110 hover:rotate-3"
+              >
+                <Mail className="w-6 h-6" />
+                <span className="sr-only">Email</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="space-y-4">
+            <Button 
+              className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-[0_0_20px_rgba(236,72,153,0.4)] transform hover:scale-105 transition-all px-8 py-4 text-lg font-mono tracking-wider relative overflow-hidden group"
+              onClick={() => scrollToSection('contact')}
+            >
+              <span className="relative z-10">BOOK NOW</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            </Button>
+            
+            <p className="text-sm text-gray-400 font-mono">
+              Available for Weddings • Parties • Corporate Events • Cultural Celebrations
+            </p>
+          </div>
+        </div>
+      </section>
+      
+      {/* About */}
+      <section id="about" className="px-6 py-16 max-w-4xl mx-auto relative">
+        {/* Background Glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-red-500/5 rounded-3xl"></div>
+        <div className="relative z-10">
+          <h2 className="text-3xl font-bold mb-8 text-orange-400 text-center font-mono tracking-wider drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]">ABOUT DJ VISH</h2>
+          
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-105 group">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-3">
+                  <Award className="w-8 h-8 text-orange-400 group-hover:animate-bounce" />
+                </div>
+                <div className="text-2xl font-bold text-white mb-1">8+</div>
+                <div className="text-sm text-gray-400 font-mono">YEARS EXPERIENCE</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-105 group">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-3">
+                  <Users className="w-8 h-8 text-orange-400 group-hover:animate-bounce" />
+                </div>
+                <div className="text-2xl font-bold text-white mb-1">300+</div>
+                <div className="text-sm text-gray-400 font-mono">EVENTS COMPLETED</div>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:scale-105 group">
+              <CardContent className="p-6 text-center">
+                <div className="flex justify-center mb-3">
+                  <Headphones className="w-8 h-8 text-orange-400 group-hover:animate-bounce" />
+                </div>
+                <div className="text-2xl font-bold text-white mb-1">4</div>
+                <div className="text-sm text-gray-400 font-mono">LANGUAGES</div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <p className="text-lg text-gray-300 mb-4">
+                DJ Vish is a premier Bay Area DJ with over 8 years of experience creating unforgettable moments. 
+                Specializing in multicultural events, he seamlessly blends Bollywood, Tollywood, Hip-Hop, and EDM 
+                to keep every generation dancing all night long.
+              </p>
+              <p className="text-lg text-gray-300 mb-4">
+                From intimate gatherings to grand celebrations, DJ Vish brings professional sound systems, 
+                dynamic lighting, and infectious energy to every event. His ability to read the crowd and 
+                adapt his music selection ensures your special day is nothing short of spectacular.
+              </p>
+              <p className="text-lg text-gray-300 mb-4">
+                Whether it's a traditional Indian wedding, a modern corporate event, or a fun birthday party, 
+                DJ Vish creates the perfect atmosphere with his extensive music library and professional equipment. 
+                He's known for his bilingual MC skills and ability to connect with guests of all ages.
+              </p>
+              <div className="space-y-2 text-gray-300">
+                <div className="flex items-center group">
+                  <Star className="w-4 h-4 text-yellow-400 mr-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:animate-pulse" />
+                  <span>8+ Years of Professional Experience</span>
+                </div>
+                <div className="flex items-center group">
+                  <Star className="w-4 h-4 text-yellow-400 mr-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:animate-pulse" />
+                  <span>300+ Successful Events</span>
+                </div>
+                <div className="flex items-center group">
+                  <Star className="w-4 h-4 text-yellow-400 mr-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:animate-pulse" />
+                  <span>Multilingual MC Services (English, Hindi, Telugu)</span>
+                </div>
+                <div className="flex items-center group">
+                  <Star className="w-4 h-4 text-yellow-400 mr-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:animate-pulse" />
+                  <span>Professional Sound & Lighting Equipment</span>
+                </div>
+                <div className="flex items-center group">
+                  <Star className="w-4 h-4 text-yellow-400 mr-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:animate-pulse" />
+                  <span>Fully Licensed & Insured</span>
+                </div>
+                <div className="flex items-center group">
+                  <Star className="w-4 h-4 text-yellow-400 mr-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] group-hover:animate-pulse" />
+                  <span>Custom Playlists & Special Requests</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative h-64 md:h-80 w-full group">
+              <Image 
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9085-C6yR8sgxxTypoyWWaWQr2CrVWq8Bgc.jpeg" 
+                alt="DJ Vish performing with energy" 
+                fill
+                className="rounded-xl shadow-[0_0_30px_rgba(236,72,153,0.3)] object-cover border border-orange-500/30 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_40px_rgba(236,72,153,0.5)]"
+              />
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-orange-600/20 to-transparent"></div>
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 rounded-xl bg-orange-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="text-center">
+                  <Headphones className="w-12 h-12 text-white mx-auto mb-2" />
+                  <p className="text-white font-mono text-sm">LIVE PERFORMANCE</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="px-6 py-16 max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold mb-8 text-orange-400 text-center font-mono tracking-wider drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]">SERVICES</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:scale-105 group">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Music className="w-8 h-8 text-orange-400 mr-3 drop-shadow-[0_0_8px_rgba(236,72,153,0.6)] group-hover:animate-pulse" />
+                <h3 className="text-xl font-bold text-orange-300 font-mono">WEDDINGS & EVENTS</h3>
+              </div>
+              <p className="text-gray-300 mb-4">
+                From traditional Indian weddings to modern celebrations, DJ Vish creates the perfect atmosphere 
+                with a mix of Bollywood, Tollywood, and international hits that keep everyone dancing.
+              </p>
+              <ul className="space-y-2 text-gray-300">
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Custom playlists for your special day
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Professional sound & lighting setup
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Bilingual MC services
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Crowd reading & energy management
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:scale-105 group">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Zap className="w-8 h-8 text-orange-400 mr-3 drop-shadow-[0_0_8px_rgba(236,72,153,0.6)] group-hover:animate-pulse" />
+                <h3 className="text-xl font-bold text-orange-300 font-mono">CORPORATE & PARTIES</h3>
+              </div>
+              <p className="text-gray-300 mb-4">
+                Professional DJ services for corporate events, birthday parties, and special celebrations. 
+                Tailored music selection to match your event's vibe and audience.
+              </p>
+              <ul className="space-y-2 text-gray-300">
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Corporate event entertainment
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Birthday & anniversary parties
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Cultural celebrations
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                  Flexible music genres
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Services & Info */}
+      <section className="px-6 py-16 max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold mb-8 text-orange-400 text-center font-mono tracking-wider drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]">SERVICES & INFO</h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Business Hours */}
+          <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Clock className="w-6 h-6 text-orange-400 mr-2 drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]" />
+                <h3 className="text-xl font-bold text-orange-300 font-mono">BUSINESS HOURS</h3>
+              </div>
+              <div className="space-y-2 text-gray-300">
+                <div className="flex justify-between">
+                  <span>Monday - Friday</span>
+                  <span>9 AM - 8 PM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Saturday</span>
+                  <span>8 AM - 11 PM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Sunday</span>
+                  <span>10 AM - 6 PM</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Service Areas */}
+          <Card className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <MapPin className="w-6 h-6 text-orange-400 mr-2 drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]" />
+                <h3 className="text-xl font-bold text-orange-300 font-mono">SERVICE AREAS</h3>
+              </div>
+              <div className="space-y-2 text-gray-300">
+                <div>• Fremont & Surrounding Areas</div>
+                <div>• San Jose</div>
+                <div>• San Francisco Bay Area</div>
+                <div>• Santa Clara County</div>
+                <div>• Alameda County</div>
+                <div className="text-orange-400 text-sm mt-3 font-mono">
+                  Travel fees may apply for distant locations
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Photo Gallery */}
+      <section id="gallery" className="px-6 py-16 bg-gradient-to-r from-blue-900/10 to-cyan-900/10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold mb-8 text-cyan-400 text-center font-mono tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">PHOTO GALLERY</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {galleryImages.map((image, idx) => (
+              <div 
+                key={idx} 
+                className="relative aspect-square cursor-pointer group overflow-hidden rounded-lg"
+                onClick={() => setSelectedImage(image)}
+              >
+                <Image 
+                  src={image.src || "/placeholder.svg"} 
+                  alt={image.alt} 
+                  fill
+                  className="object-cover transition-transform group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-white font-semibold">{image.category}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Image Modal */}
+        {selectedImage && (
+          <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onClick={() => setSelectedImage(null)}>
+            <div className="relative max-w-4xl max-h-full">
+              <Image 
+                src={selectedImage.src || "/placeholder.svg"} 
+                alt={selectedImage.alt} 
+                width={800}
+                height={600}
+                className="object-contain rounded-lg"
+              />
+              <button 
+                className="absolute top-4 right-4 text-white bg-black/50 rounded-full p-2"
+                onClick={() => setSelectedImage(null)}
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* Music Samples */}
+      <section id="music" className="px-6 py-16 max-w-4xl mx-auto">
+        <div className="relative z-10">
+          <h2 className="text-3xl font-bold mb-8 text-orange-400 text-center font-mono tracking-wider drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]">MUSIC SAMPLES</h2>
+          <div className="space-y-4">
+            {musicSamples.map((track) => (
+              <Card key={track.id} className="bg-slate-800/80 backdrop-blur-sm border border-orange-600 hover:border-orange-400 transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] hover:scale-[1.02] group">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <button 
+                        onClick={() => playTrack(track.id)}
+                        className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 rounded-full p-3 transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.4)] hover:shadow-[0_0_25px_rgba(236,72,153,0.6)] hover:scale-110"
+                      >
+                        {currentTrack === track.id && isPlaying ? 
+                          <Pause className="w-5 h-5" /> : 
+                          <Play className="w-5 h-5" />
+                        }
+                      </button>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white text-lg group-hover:text-orange-300 transition-colors">{track.title}</h3>
+                        <p className="text-gray-400 text-sm">{track.genre} • {track.duration}</p>
+                        {/* Energy Bar */}
+                        <div className="mt-2 flex items-center space-x-2">
+                          <div className="flex-1 bg-gray-700 rounded-full h-2 overflow-hidden">
+                            <div 
+                              className="bg-gradient-to-r from-orange-400 to-red-500 h-full rounded-full transition-all duration-300"
+                              style={{ width: `${track.energy}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-xs text-gray-400 font-mono">{track.energy}%</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Volume2 className="w-4 h-4 text-orange-400" />
+                      <span className="text-sm text-gray-400 font-mono">PREVIEW</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <p className="text-gray-400 mb-4 font-mono">Want to hear more? Check out my full mixes on SoundCloud</p>
+            <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 shadow-[0_0_20px_rgba(249,115,22,0.5)] hover:shadow-[0_0_30px_rgba(249,115,22,0.7)] transform hover:scale-105 transition-all duration-300">
+              <Volume2 className="w-4 h-4 mr-2" />
+              Visit SoundCloud
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Testimonials */}
+      <section id="testimonials" className="px-6 py-16 bg-gradient-to-r from-blue-900/20 to-cyan-900/20 relative">
+        {/* Background Glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5 rounded-3xl"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <h2 className="text-3xl font-bold mb-8 text-cyan-400 text-center font-mono tracking-wider drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]">WHAT CLIENTS SAY</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                name: "Priya S.",
+                event: "Wedding Reception",
+                rating: 5,
+                review: "DJ Vish was absolutely amazing at our wedding! He played the perfect mix of Bollywood and American hits. Everyone was dancing all night long. His energy was incredible and he really made our special day unforgettable.",
+                highlight: "Perfect mix"
+              },
+              {
+                name: "Sunita M.",
+                event: "Birthday Party",
+                rating: 5,
+                review: "Hired DJ Vish for my daughter's sweet 16 and he was fantastic! Great music selection, amazing energy, and he kept everyone entertained throughout the night. Highly recommend!",
+                highlight: "Fantastic"
+              },
+              {
+                name: "Raj K.",
+                event: "Corporate Event",
+                rating: 5,
+                review: "Professional, punctual, and fantastic music. Our employees loved the diverse playlist. DJ Vish really knows how to read the crowd and keep everyone engaged.",
+                highlight: "Professional"
+              },
+              {
+                name: "Meera & Arjun",
+                event: "Wedding",
+                rating: 5,
+                review: "DJ Vish made our wedding reception absolutely magical! He seamlessly blended Indian and Western music, and everyone from our grandparents to our friends had an amazing time dancing.",
+                highlight: "Magical"
+              },
+              {
+                name: "Kavya P.",
+                event: "Graduation Party",
+                rating: 5,
+                review: "Best DJ in the Bay Area! DJ Vish brought the perfect vibe to our graduation celebration. Great mix of Telugu, Hindi, and English songs. Everyone loved it!",
+                highlight: "Best DJ"
+              },
+              {
+                name: "Mike & Sarah",
+                event: "Mixed Wedding",
+                rating: 5,
+                review: "DJ Vish was incredible at our mixed wedding! He understood our vision perfectly and created the perfect blend of cultures. His music selection was spot-on and kept everyone dancing.",
+                highlight: "Incredible"
+              }
+            ].map((testimonial, idx) => (
+              <Card key={idx} className="bg-slate-800/80 backdrop-blur-sm border border-cyan-700 hover:border-cyan-500 transition-all duration-300 hover:shadow-[0_0_25px_rgba(34,211,238,0.3)] hover:scale-[1.02] group">
+                <CardContent className="p-6">
+                  <div className="flex mb-3">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-yellow-400 fill-current drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" />
+                    ))}
+                  </div>
+                  <p className="text-gray-300 mb-4 italic">"{testimonial.review}"</p>
+                  <div className="text-cyan-300 font-semibold group-hover:text-cyan-200 transition-colors">{testimonial.name}</div>
+                  <div className="text-gray-400 text-sm">{testimonial.event}</div>
+                  <div className="mt-2 inline-block bg-cyan-500/20 text-cyan-300 text-xs px-2 py-1 rounded-full font-mono">
+                    {testimonial.highlight}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <div className="inline-flex items-center bg-slate-800/80 backdrop-blur-sm border border-cyan-700 rounded-lg px-6 py-3 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+              <div className="flex mr-3">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current drop-shadow-[0_0_10px_rgba(250,204,21,0.7)]" />
+                ))}
+              </div>
+              <span className="text-white font-semibold font-mono">5.0 RATING</span>
+              <span className="text-gray-400 ml-2 font-mono">• 50+ REVIEWS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="px-6 py-16 max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold mb-8 text-cyan-400 text-center font-mono tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">FREQUENTLY ASKED QUESTIONS</h2>
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => (
+            <Card key={idx} className="bg-slate-800 border border-cyan-600 hover:border-cyan-400 transition-colors">
+              <CardContent className="p-6">
+                <h3 className="font-semibold text-cyan-300 mb-2 font-mono">{faq.question}</h3>
+                <p className="text-gray-300">{faq.answer}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+      
+      {/* Gigs */}
+      <section id="gigs" className="px-6 py-16 bg-cyan-900 bg-opacity-10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6 text-cyan-400 text-center font-mono tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">EVENT TYPES</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { name: 'Weddings', icon: '💍', description: 'Complete wedding entertainment packages' },
+              { name: 'Graduations', icon: '🎓', description: 'Celebrate achievements with great music' },
+              { name: 'House Parties', icon: '🏠', description: 'Intimate gatherings with personalized playlists' },
+              { name: 'Indian Cultural Events', icon: '🪔', description: 'Traditional and modern Indian celebrations' },
+              { name: 'Corporate Gigs', icon: '💼', description: 'Professional events and team celebrations' },
+              { name: 'Fashion Shows', icon: '👗', description: 'High-energy music for runway events' }
+            ].map((gig, idx) => (
+              <Card key={idx} className="bg-slate-800 border border-cyan-600 hover:border-cyan-400 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-3">
+                    <span className="text-2xl mr-3">{gig.icon}</span>
+                    <h3 className="font-semibold text-white font-mono">{gig.name}</h3>
+                  </div>
+                  <p className="text-gray-400 text-sm">{gig.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Contact */}
+      <section id="contact" className="px-6 py-16 max-w-2xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 text-cyan-400 text-center font-mono tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">BOOK DJ VISH</h2>
+        <Card className="bg-slate-800 border border-cyan-600">
+          <CardContent className="p-6 space-y-4">
+            {submitMessage && (
+              <div className={`p-4 rounded-lg ${submitMessage.includes('Thank you') ? 'bg-green-900/50 border border-green-700' : 'bg-red-900/50 border border-red-700'}`}>
+                <p className="text-sm">{submitMessage}</p>
+              </div>
+            )}
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="name" className="text-sm text-gray-400 mb-1 block font-mono">YOUR NAME *</label>
+                  <Input 
+                    id="name"
+                    name="name" 
+                    placeholder="Your Name" 
+                    value={form.name} 
+                    onChange={handleChange} 
+                    className="bg-slate-700 text-white border-slate-600 focus:border-cyan-500 focus:ring-cyan-500" 
+                    required 
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="text-sm text-gray-400 mb-1 block font-mono">PHONE NUMBER</label>
+                  <Input 
+                    id="phone"
+                    name="phone" 
+                    type="tel"
+                    placeholder="(555) 123-4567" 
+                    value={form.phone} 
+                    onChange={handleChange} 
+                    className="bg-slate-700 text-white border-slate-600 focus:border-cyan-500 focus:ring-cyan-500" 
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="email" className="text-sm text-gray-400 mb-1 block font-mono">YOUR EMAIL *</label>
+                  <Input 
+                    id="email"
+                    name="email" 
+                    type="email" 
+                    placeholder="your@email.com" 
+                    value={form.email} 
+                    onChange={handleChange} 
+                    className="bg-slate-700 text-white border-slate-600 focus:border-cyan-500 focus:ring-cyan-500" 
+                    required 
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="eventDate" className="text-sm text-gray-400 mb-1 block font-mono">EVENT DATE</label>
+                  <Input 
+                    id="eventDate"
+                    name="eventDate" 
+                    type="date" 
+                    value={form.eventDate} 
+                    onChange={handleChange} 
+                    className="bg-slate-700 text-white border-slate-600 focus:border-cyan-500 focus:ring-cyan-500" 
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="eventType" className="text-sm text-gray-400 mb-1 block font-mono">EVENT TYPE</label>
+                <select 
+                  id="eventType"
+                  name="eventType" 
+                  value={form.eventType} 
+                  onChange={handleChange} 
+                  className="w-full bg-slate-700 text-white border border-slate-600 focus:border-cyan-500 focus:ring-cyan-500 rounded-md px-3 py-2"
+                >
+                  <option value="">Select Event Type</option>
+                  <option value="wedding">Wedding</option>
+                  <option value="birthday">Birthday Party</option>
+                  <option value="corporate">Corporate Event</option>
+                  <option value="graduation">Graduation</option>
+                  <option value="cultural">Cultural Event</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="text-sm text-gray-400 mb-1 block font-mono">EVENT DETAILS *</label>
+                <Textarea 
+                  id="message"
+                  name="message" 
+                  placeholder="Tell us about your event: venue, guest count, music preferences, special requests, etc." 
+                  value={form.message} 
+                  onChange={handleChange} 
+                  className="bg-slate-700 text-white border-slate-600 focus:border-cyan-500 focus:ring-cyan-500 min-h-[120px]" 
+                  required 
+                />
+              </div>
+              
+              <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white disabled:opacity-50 shadow-[0_0_20px_rgba(34,211,238,0.3)] border border-cyan-400/50"
+              >
+                {isSubmitting ? 'SENDING...' : 'SEND BOOKING REQUEST'}
+              </Button>
+            </form>
+            
+            <div className="text-center pt-4 border-t border-slate-700">
+              <p className="text-gray-400 mb-2 font-mono">OR CONTACT DIRECTLY:</p>
+              <div className="space-y-1">
+                <a 
+                  href="mailto:booking@djvish.com" 
+                  className="text-cyan-400 hover:text-cyan-300 font-medium block font-mono"
+                >
+                  booking@djvish.com
+                </a>
+                <a 
+                  href="tel:+14085551234" 
+                  className="text-cyan-400 hover:text-cyan-300 font-medium block font-mono"
+                >
+                  (408) 555-1234
+                </a>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+      
+      {/* Footer */}
+      <footer className="text-center py-8 text-gray-500 text-sm border-t border-slate-800">
+        <div className="flex justify-center space-x-6 mb-4">
+          <Link 
+            href="https://www.instagram.com/djvish_official" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-pink-400 transition-colors"
+          >
+            <Instagram className="w-5 h-5" />
+            <span className="sr-only">Instagram</span>
+          </Link>
+          <Link 
+            href="https://www.facebook.com/djvishofficial" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-blue-400 transition-colors"
+          >
+            <Facebook className="w-5 h-5" />
+            <span className="sr-only">Facebook</span>
+          </Link>
+          <Link 
+            href="https://www.yelp.com/biz/dj-vish-fremont" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-red-400 transition-colors"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.004 5.367 18.637.001 12.017.001zM8.449 19.675c-.168.168-.504.336-.672.168-.168-.168-.168-.504 0-.672l2.688-2.688c.168-.168.504-.168.672 0 .168.168.168.504 0 .672l-2.688 2.52zm7.056-7.056c-.168.168-.504.168-.672 0l-2.688-2.688c-.168-.168-.168-.504 0-.672.168-.168.504-.168.672 0l2.688 2.688c.168.168.168.504 0 .672z"/>
+            </svg>
+            <span className="sr-only">Yelp</span>
+          </Link>
+        </div>
+        <p className="font-mono">© {new Date().getFullYear()} DJ VISH. ALL RIGHTS RESERVED.</p>
+        <p className="mt-1 text-xs font-mono">FUTURISTIC SOUND ENGINEERING IN THE BAY AREA</p>
+      </footer>
+    </div>
+  );
+}

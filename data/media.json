@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "type": "image",
+    "src": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9083-ZOLxXh9mqS5DSFYCjWqZdlxxcsHmDV.jpeg",
+    "alt": "DJ Vish at wedding reception",
+    "category": "Wedding",
+    "createdAt": "2024-12-20T00:00:00.000Z",
+    "featured": true,
+    "title": "Wedding Reception",
+    "description": "Creating magical moments at a beautiful Bay Area wedding"
+  },
+  {
+    "id": "2",
+    "type": "image",
+    "src": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9085-C6yR8sgxxTypoyWWaWQr2CrVWq8Bgc.jpeg",
+    "alt": "DJ Vish performing live",
+    "category": "Performance",
+    "createdAt": "2024-12-19T00:00:00.000Z",
+    "featured": true,
+    "title": "Live Performance",
+    "description": "High-energy performance keeping the dance floor packed"
+  },
+  {
+    "id": "3",
+    "type": "image",
+    "src": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9082-c8XZXBnbiXwi7gXteRmMfrubi07ezA.jpeg",
+    "alt": "DJ Vish at corporate event",
+    "category": "Corporate",
+    "createdAt": "2024-12-18T00:00:00.000Z",
+    "featured": false,
+    "title": "Corporate Event",
+    "description": "Professional setup for corporate entertainment"
+  },
+  {
+    "id": "4",
+    "type": "image",
+    "src": "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_9084-1Rkk25tcsmbZreg8TPNmWHDsZvmceY.jpeg",
+    "alt": "DJ Vish at birthday party",
+    "category": "Party",
+    "createdAt": "2024-12-17T00:00:00.000Z",
+    "featured": false,
+    "title": "Birthday Celebration",
+    "description": "Fun-filled birthday party with great music"
+  }
+]
+
